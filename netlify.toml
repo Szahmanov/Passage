@@ -1,0 +1,30 @@
+# Passage by StaGove — Netlify configuration (no build step)
+
+[build]
+  publish = "."
+  command = ""
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+# Friendly API path → serverless function that holds the Groq key.
+[[redirects]]
+  from = "/api/groq"
+  to = "/.netlify/functions/groq"
+  status = 200
+
+# Security headers for the static app.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# Always fetch a fresh service worker so updates ship immediately.
+[[headers]]
+  for = "/service-worker.js"
+  [headers.values]
+    Cache-Control = "no-cache"
