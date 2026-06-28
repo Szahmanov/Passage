@@ -1526,7 +1526,9 @@
     }
     modal('<div class="modal-head"><h3>' + esc(title) + '</h3><button class="icon-btn" data-close-modal style="width:32px;height:32px;border-color:var(--line);background:#fff;color:var(--ink)">✕</button></div>' +
       '<div class="modal-body">' + body + '</div>' +
-      '<div class="modal-foot"><button class="btn btn-ghost" data-act="import-open">Import a case file</button><button class="btn btn-primary" data-close-modal>Got it</button></div>');
+      '<div class="modal-foot">' +
+        '<label class="btn btn-ghost" style="cursor:pointer">Import a case file<input type="file" accept="application/json,.json" style="display:none" id="modal-import-input"></label>' +
+        '<button class="btn btn-primary" data-close-modal>Got it</button></div>');
   }
 
   /* ----------------------------------------------------- global handlers */
@@ -1623,6 +1625,12 @@
     $("#foot-privacy").addEventListener("click", function () { openInfo("privacy"); });
     $("#foot-disclaimer").addEventListener("click", function () { openInfo("disclaimer"); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeModal(); });
+    // delegated handler for the import-file input inside the Privacy modal
+    document.addEventListener("change", function (e) {
+      if (e.target && e.target.id === "modal-import-input" && e.target.files && e.target.files[0]) {
+        closeModal(); importCaseFile(e.target.files[0]);
+      }
+    });
   }
 
   /* --------------------------------------------------------------- PWA */
